@@ -1,29 +1,26 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { BsSend } from "react-icons/bs";
-// import { useAuthContext } from "../../context/AuthContext";
 import { useState } from "react";
-// import { sendMessage } from "../../hooks/conversation.hook";
-// import userConversation from "../../zustand/useConversation";
+import useSendMessage from "../../hooks/useSendMessage";
+import userConversation from "../../zustand/useConversation";
+import toast from "react-hot-toast";
 
 const MessageInput = () => {
   const [loading, setLoading] = useState(false);
-  // const { authUser } = useAuthContext();
-  // const { selectedConversation, messages, setMessages } = userConversation();
+  const { selectedConversation, messages, setMessages } = userConversation();
   const [message, setMessage] = useState("");
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
-    // if (!message) {
-    //   setLoading(false);
-    //   return;
-    // }
-    // const data = await sendMessage(
-    //   message,
-    //   selectedConversation._id,
-    //   authUser.token,
-    // );
-    // setMessages([...messages, data]);
-    // setMessage("");
-    // setLoading(false);
+    try {
+      setLoading(true);
+      const data = await useSendMessage(message, selectedConversation._id);
+      setMessages([...messages, data]);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setMessage("");
+      setLoading(false);
+    }
   };
 
   return (
