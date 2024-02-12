@@ -9,12 +9,13 @@ const MessageInput = () => {
   const [loading, setLoading] = useState(false);
   const { selectedConversation, messages, setMessages } = userConversation();
   const [message, setMessage] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       const data = await useSendMessage(message, selectedConversation._id);
-      setMessages([...messages, data]);
+      setMessages([...messages, data.newMessage]);
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -26,7 +27,7 @@ const MessageInput = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full items-center justify-between gap-2 rounded-lg bg-slate-600 px-4 py-2 opacity-60 duration-500 hover:opacity-100 focus:opacity-100"
+      className={`flex w-full items-center justify-between gap-2 rounded-lg bg-slate-600 px-4 py-2 opacity-60 duration-500 hover:opacity-100 focus:opacity-100 ${message.length > 0 ? "opacity-100" : ""}`}
     >
       <input
         value={message}
