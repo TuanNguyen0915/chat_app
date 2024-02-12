@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-// import { useAuthContext } from "../../context/AuthContext";
-
+import signUp from "../hooks/useSignUp";
+import { useAuthContext } from "../context/AuthContext";
 
 const SignUp = () => {
-  // const {setAuthUser} = useAuthContext()
+  const { setAuthUser } = useAuthContext();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -27,16 +28,22 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    toast.success('Click me')
-    // const user = await signup(formData);
-    // if (user && !user.success) {
-    //   toast.error(user.message);
-    // } else if (user && user.success) {
-    //   setAuthUser(user)
-    //   toast.success(user.message);
-    //   navigate("/");
-    // }
+    try {
+      e.preventDefault();
+      setLoading(true);
+      const user = await signUp(formData);
+      if (user && !user.success) {
+        toast.error(user.message);
+      } else if (user && user.success) {
+        setAuthUser(user);
+        toast.success(user.message);
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,7 +155,16 @@ const SignUp = () => {
             Login
           </span>
         </p>
-        <button className="btn btn-lg btn-block mt-2">SignUp</button>
+        <button
+          disabled={loading}
+          className={`btn btn-lg btn-block mt-2 ${loading ? "cursor-not-allowed" : ""}`}
+        >
+          {loading ? (
+            <span className="loading loading-spinner loading-md"></span>
+          ) : (
+            "SignUp"
+          )}
+        </button>
       </form>
     </section>
   );

@@ -2,21 +2,26 @@ import Conversations from "./Conversations";
 import SearchInput from "./SearchInput";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-// import { logout } from "../../hooks/auth.hook";
-// import { useAuthContext } from "../../context/AuthContext";
+import logOut from "../../hooks/useLogout";
+import { useAuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 // import userConversation from "../../zustand/useConversation";
 
 const Sidebar = () => {
   // const { setSelectedConversation } = userConversation();
-  // const { setAuthUser } = useAuthContext();
+  const { setAuthUser } = useAuthContext();
   const navigate = useNavigate();
 
   const handleLogOut = (e) => {
-    e.preventDefault();
-    // logout();
-    // setAuthUser(null);
-    // setSelectedConversation(null);
-    navigate("/login");
+    try {
+      e.preventDefault();
+      logOut();
+      setAuthUser(null);
+      // setSelectedConversation(null);
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
