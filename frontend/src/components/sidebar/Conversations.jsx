@@ -1,10 +1,6 @@
-// import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ConversationCard from "./ConversationCard";
-// import useGetConversation from "../../hooks/useGetConversation";
 import { useEffect, useState } from "react";
-// import { useAuthContext } from "../../context/AuthContext";
-// import { getAllUsers } from "../../hooks/conversation.hook";
 
 const Conversations = () => {
   const [conversations, setConversation] = useState([]);
@@ -24,7 +20,6 @@ const Conversations = () => {
       setLoading(false);
     }
   }, []);
-  console.log(conversations);
   return (
     <div className="flex-1 overflow-auto">
       {loading ? (
