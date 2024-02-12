@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Conversations from "./Conversations";
 import SearchInput from "./SearchInput";
 import { BiLogOut } from "react-icons/bi";
@@ -6,11 +7,29 @@ import logOut from "../../hooks/useLogout";
 import { useAuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import userConversation from "../../zustand/useConversation";
+import { useEffect, useState } from "react";
+import useGetConversation from "../../hooks/useGetConversation";
 
 const Sidebar = () => {
   const { setSelectedConversation } = userConversation();
   const { setAuthUser } = useAuthContext();
   const navigate = useNavigate();
+  const [conversations, setConversation] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    try {
+      setLoading(true);
+      const fetchData = async () => {
+        const data = await useGetConversation();
+        setConversation(data.users);
+      };
+      fetchData();
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const handleLogOut = (e) => {
     try {
@@ -26,9 +45,9 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col border-r border-slate-600 p-2 pr-8 ">
-      <SearchInput />
+      <SearchInput conversations={conversations} />
       <div className="divider px-3" />
-      <Conversations />
+      <Conversations loading={loading} conversations={conversations} />
       <div className="my-4 flex items-center">
         <BiLogOut
           onClick={handleLogOut}
