@@ -1,35 +1,29 @@
-const MessageCard = () => {
+import { useAuthContext } from "../../context/AuthContext";
+import { convertTime } from "../../utils/converTime";
+import useConversation from "../../zustand/useConversation";
+
+const MessageCard = ({ message }) => {
+  const { authUser } = useAuthContext();
+  const { selectedConversation } = useConversation();
+  const fromSender = authUser.user._id === message.senderId;
+  const chatPosition = fromSender ? "chat-end" : "chat-start";
+  const profilePhoto = fromSender
+    ? authUser.user.profilePhoto
+    : selectedConversation.profilePhoto;
+  const formattedTime = convertTime(message.createdAt);
   return (
-    <div>
-      <div className="chat chat-start">
-        <div className="avatar chat-image">
-          <div className="w-10 rounded-full">
-            <img
-              alt="Tailwind CSS chat bubble component"
-              src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-            />
-          </div>
+    <div className={`chat ${chatPosition}`}>
+      <div className="avatar chat-image">
+        <div className="w-10 rounded-full">
+          <img alt="sender photo" src={profilePhoto} />
         </div>
-        <div className="chat-bubble text-gray-300">
-          You were the Chosen One!
-        </div>
-        <div className="chat-footer opacity-50">Delivered</div>
       </div>
-      <div className="chat chat-end">
-        <div className="avatar chat-image">
-          <div className="w-10 rounded-full">
-            <img
-              alt="Tailwind CSS chat bubble component"
-              src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-            />
-          </div>
-        </div>
-        <div className="chat-bubble bg-blue-500 text-gray-300">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam nulla
-          fugit nostrum dolore est
-        </div>
-        <div className="chat-footer opacity-50">Seen at 12:46</div>
+      <div
+        className={`chat-bubble ${fromSender ? "bg-blue-500" : ""} text-gray-300`}
+      >
+        {message.message}
       </div>
+      <div className="chat-footer italic opacity-50">{formattedTime}</div>
     </div>
   );
 };

@@ -11,7 +11,6 @@ const logOut = async () => {
     const data = await res.json();
     toast.success(data.message);
     localStorage.removeItem("chat-user");
-    console.log(data);
     return data;
   } catch (error) {
     toast.error(error.message);

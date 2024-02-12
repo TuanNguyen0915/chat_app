@@ -2,25 +2,23 @@ import Header from "./Header";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import NoChatSelected from "./NoChatSelected";
-import { useAuthContext } from "../../context/AuthContext";
 import userConversation from "../../zustand/useConversation";
 
 
 const MessageContainer = () => {
-  const { authUser } = useAuthContext();
   const { selectedConversation } = userConversation();
-  const user = authUser.user;
+  
 
   if (!selectedConversation) {
     return (
       <div className="flexCenter md:min-w-[450px]">
-        <NoChatSelected user={user} />
+        <NoChatSelected />
       </div>
     );
   }
   return (
     <div className="flex flex-col md:min-w-[450px]">
-      <Header selectedConversation={selectedConversation}/>
+      <Header />
       <Messages />
       <div className="w-full p-2">
         <MessageInput />
