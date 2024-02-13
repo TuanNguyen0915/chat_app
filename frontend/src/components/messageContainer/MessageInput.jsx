@@ -2,26 +2,17 @@
 import { BsSend } from "react-icons/bs";
 import { useState } from "react";
 import useSendMessage from "../../hooks/useSendMessage";
-import userConversation from "../../zustand/useConversation";
-import toast from "react-hot-toast";
+
 
 const MessageInput = () => {
-  const [loading, setLoading] = useState(false);
-  const { selectedConversation, messages, setMessages } = userConversation();
+  const { loading, sendMessage } = useSendMessage();
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      const data = await useSendMessage(message, selectedConversation._id);
-      setMessages([...messages, data.newMessage]);
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setMessage("");
-      setLoading(false);
-    }
+    if (!message) return;
+		await sendMessage(message);
+		setMessage("");
   };
 
   return (
