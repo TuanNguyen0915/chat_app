@@ -1,4 +1,4 @@
-// import Header from "./Header";
+import Header from "./Header";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import NoChatSelected from "./NoChatSelected";
@@ -21,7 +21,7 @@ const MessageContainer = () => {
         </div>
       ) : (
         <>
-          {/* <Header /> */}
+          <Header />
           <Messages />
           <div className="w-full p-2">
             <MessageInput />
